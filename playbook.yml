@@ -1,0 +1,75 @@
+- name: Prepare vagrant nodes
+  hosts: all
+  gather_facts: false
+  become: true
+  vars:
+    users:
+      - root
+      - vagrant
+    pkgs:
+      - git
+      - zsh
+  pre_tasks:
+    - name: Set time zone
+      community.general.timezone:
+        name: Europe/Moscow
+    - name: Put authorized keys
+      ansible.posix.authorized_key:
+        user: vagrant
+        state: present
+        key: https://github.com/blackden.keys
+    - name: Update system
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+
+  tasks:
+    - name: Debug
+      ansible.builtin.debug:
+        var: item
+      loop: "{{ users }}"
+      tags:
+        - never
+        - debug
+    - name: Install requered packages
+      ansible.builtin.apt:
+        name:
+          - git
+          - zsh
+    - name: Install Oh-My-Zsh block
+      block:
+        - name: Get Oh-My-Zsh repo from git
+          ansible.builtin.git:
+            repo: https://github.com/ohmyzsh/ohmyzsh.git
+            dest: ~{{ item }}/.oh-my-zsh
+          loop: "{{ users }}"
+        # - name: Copy Oh-My-Zsh template file
+        #   ansible.builtin.copy:
+        #     src: /tmp/ohmyzsh/templates/zshrc.zsh-template
+        #     dest:  "~{{ item }}/.zshrc" 
+        #     owner: "{{ item }}"
+        #     group: "{{ item }}"
+        #     mode: 0644
+        #     remote_src: true
+        #     force: true
+        #   loop: "{{ users }}"
+    - name: Download home stuff
+      ansible.builtin.git:
+        repo: https://github.com/blackden/home_stuff.git
+        dest: /tmp/home_stuff
+    - name: Copy home stuff files
+      ansible.builtin.copy:
+        src: /tmp/home_stuff/.zshrc
+        dest: ~{{ item }} 
+        owner: "{{ item }}"
+        group: "{{ item }}"
+        mode: 0644
+        remote_src: true
+      loop: "{{ users }}"
+
+  post_tasks:
+    - name: Set zsh as default shell
+      ansible.builtin.user:
+        name: "{{ item }}"
+        shell: /usr/bin/zsh
+      loop: "{{ users }}"
