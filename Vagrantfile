@@ -13,6 +13,7 @@ Vagrant.configure("2") do |config|
       ubnt.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)", ip: "192.168.1.12#{i}"
       ubnt.vm.provider "virtualbox" do |vb|
         vb.name = "ubnt-#{i}"
+        vb.cpus = 2
         vb.memory = "1024"
       end
     end
