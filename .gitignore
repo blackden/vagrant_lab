@@ -1,0 +1,6 @@
+*
+!.gitignore
+!Vagrantfile
+!playbook.yml
+!requirements.yml
+!LICENSE
