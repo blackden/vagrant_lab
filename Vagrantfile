@@ -4,13 +4,13 @@
 Vagrant.configure("2") do |config|
   (1..1).each do |i|
     config.vm.define "ubnt-#{i}" do |ubnt|
-    ubnt.vm.box = "ubuntu/focal64"
-    ubnt.vm.box_check_update = false
-    ubnt.vm.hostname = "ubnt-#{i}"
-    ubnt.vm.provision "ansible" do |ansible|
-      ansible.playbook = "playbook.yml"
-    end
-    ubnt.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)", ip: "192.168.1.12#{i}"
+      ubnt.vm.box = "ubuntu/focal64"
+      ubnt.vm.box_check_update = false
+      ubnt.vm.hostname = "ubnt-#{i}"
+      ubnt.vm.provision "ansible" do |ansible|
+        ansible.playbook = "playbook.yml"
+      end
+      ubnt.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)", ip: "192.168.1.12#{i}"
       ubnt.vm.provider "virtualbox" do |vb|
         vb.name = "ubnt-#{i}"
         vb.memory = "1024"
