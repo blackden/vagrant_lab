@@ -39,7 +39,7 @@ The Vagrantfile contains the following configuration:
 
 ## Authors
 
-- [Your Name](https://github.com/yourname)
+- [blackden](https://github.com/blackden)
 
 ## License
 
