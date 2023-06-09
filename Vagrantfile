@@ -7,6 +7,7 @@ Vagrant.configure("2") do |config|
       ubnt.vm.box = "ubuntu/focal64"
       ubnt.vm.box_check_update = false
       ubnt.vm.hostname = "ubnt-#{i}"
+# some changes
       ubnt.vm.provision "ansible" do |ansible|
         ansible.playbook = "playbook.yml"
       end
